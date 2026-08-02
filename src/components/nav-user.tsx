@@ -17,7 +17,7 @@ interface NavUserProps {
   };
 }
 
-export default function NavUser({ user }: NavUserProps) {
+export function NavUser({ user }: NavUserProps) {
   return (
     <SidebarMenu>
       <SidebarMenuItem>

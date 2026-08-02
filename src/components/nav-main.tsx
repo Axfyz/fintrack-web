@@ -19,9 +19,8 @@ interface NavMainProps {
   items: NavItem[];
 }
 
-export default function NavMain({ items }: NavMainProps) {
+export function NavMain({ items }: NavMainProps) {
   const location = useLocation();
-  console.log(location);
 
   return (
     <SidebarGroup>

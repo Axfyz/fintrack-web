@@ -5,8 +5,8 @@ import {
   SidebarFooter,
   SidebarHeader,
 } from "./ui/sidebar";
-import NavMain from "./nav-main";
-import NavUser from "./nav-user";
+import { NavMain } from "@/components/nav-main";
+import { NavUser } from "@/components/nav-user";
 
 const menuItems = [
   { title: "Dashboard", url: "/", icon: Home },
@@ -20,7 +20,7 @@ const dummyUser = {
   avatar: "",
 };
 
-export default function AppSidebar() {
+export function AppSidebar() {
   return (
     <Sidebar>
       <SidebarHeader>
