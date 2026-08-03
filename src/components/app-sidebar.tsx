@@ -11,7 +11,7 @@ import { NavUser } from "@/components/nav-user";
 const menuItems = [
   { title: "Dashboard", url: "/", icon: Home },
   { title: "Transaksi", url: "/transaction", icon: Wallet },
-  { title: "Laporan", url: "#", icon: PieChart },
+  { title: "Laporan", url: "/report", icon: PieChart },
 ];
 
 const dummyUser = {

@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Controller, useForm } from "react-hook-form";
+import { useEffect, useState, type ReactNode } from "react";
+import { Controller, useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   transactionSchema,
@@ -40,42 +40,84 @@ import { CalendarIcon } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
 import { Textarea } from "@/components/ui/textarea";
+import type { Transaction } from "@/types/transaction";
 
 interface TransactionDialogProps {
-  onAdd: (values: TransactionFormValues) => void;
+  mode?: "add" | "edit";
+  transaction?: Transaction;
+  trigger?: ReactNode;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  onSubmit: (values: TransactionFormValues) => void;
 }
 
-export function TransactionDialog({ onAdd }: TransactionDialogProps) {
-  const [open, setOpen] = useState(false);
+function toDefaultValues(transaction?: Transaction): TransactionFormValues {
+  if (!transaction) {
+    return {
+      type: "expense",
+      category: "",
+      amount: 0,
+      description: "",
+      date: new Date(),
+    };
+  }
+
+  return {
+    type: transaction.type,
+    category: transaction.category,
+    amount: transaction.amount,
+    description: transaction.description,
+    date: new Date(transaction.date),
+  };
+}
+
+export function TransactionDialog({
+  mode = "add",
+  transaction,
+  trigger,
+  open: controlledOpen,
+  onOpenChange,
+  onSubmit: onSubmitProp,
+}: TransactionDialogProps) {
+  const [internalOpen, setInternalOpen] = useState(false);
+  const open = controlledOpen ?? internalOpen;
+  const setOpen = onOpenChange ?? setInternalOpen;
 
   const form = useForm<TransactionFormValues>({
     resolver: zodResolver(transactionSchema),
-    defaultValues: {
-      type: "expense",
-      amount: 0,
-      category: "",
-      date: new Date(),
-      description: "",
-    },
+    defaultValues: toDefaultValues(transaction),
   });
 
-  const type = form.watch("type");
+  const { reset } = form;
+  useEffect(() => {
+    if (open) {
+      reset(toDefaultValues(transaction));
+    }
+  }, [open, transaction, reset]);
+
+  const type = useWatch({ control: form.control, name: "type" });
   const categories = type === "income" ? incomeCategories : expenseCategories;
 
   function onSubmit(values: TransactionFormValues) {
-    onAdd(values);
+    onSubmitProp(values);
     form.reset();
     setOpen(false);
   }
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button>+ Tambah Transaksi</Button>
-      </DialogTrigger>
+      {trigger !== undefined ? (
+        <DialogTrigger asChild>{trigger}</DialogTrigger>
+      ) : mode === "add" ? (
+        <DialogTrigger asChild>
+          <Button>+ Tambah Transaksi</Button>
+        </DialogTrigger>
+      ) : null}
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Tambah Transaksi</DialogTitle>
+          <DialogTitle>
+            {mode === "edit" ? "Edit Transaksi" : "Tambah Transaksi"}
+          </DialogTitle>
         </DialogHeader>
 
         <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -217,7 +259,9 @@ export function TransactionDialog({ onAdd }: TransactionDialogProps) {
           </FieldGroup>
 
           <DialogFooter className="mt-4">
-            <Button type="submit">Simpan</Button>
+            <Button type="submit">
+              {mode === "edit" ? "Simpan Perubahan" : "Simpan"}
+            </Button>
           </DialogFooter>
         </form>
       </DialogContent>
