@@ -6,7 +6,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { useTransactions } from "@/hooks/use-transactions";
 import { AppLayout } from "@/layouts/app-layout";
 
-export default function Dashboard() {
+export default function DashboardPage() {
   const isMobile = useIsMobile();
   const { transactions } = useTransactions();
 

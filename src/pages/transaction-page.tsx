@@ -11,10 +11,11 @@ import { ConfirmAlert } from "@/components/confirm-alert";
 import { TransactionCard } from "@/components/transaction-card";
 import { Button } from "@/components/ui/button";
 import { useTransactions } from "@/hooks/use-transactions";
+import { toast } from "sonner";
 
 const PAGE_SIZE = 5;
 
-export default function Transaction() {
+export default function TransactionPage() {
   const isMobile = useIsMobile();
   const { transactions, addTransaction, updateTransaction, deleteTransaction } =
     useTransactions();
@@ -38,6 +39,7 @@ export default function Transaction() {
       description: values.description || "-",
       date: values.date.toISOString().split("T")[0],
     });
+    toast.success("Transaksi berhasil ditambahkan");
   }
 
   function handleEditClick(transaction: Transaction) {
@@ -55,6 +57,7 @@ export default function Transaction() {
       date: values.date.toISOString().split("T")[0],
     });
     setEditingTransaction(null);
+    toast.success("Transaksi berhasil diperbarui");
   }
 
   function handleDeleteClick(transaction: Transaction) {
@@ -67,6 +70,7 @@ export default function Transaction() {
     deleteTransaction(deletingTransaction.id);
     setDeletingTransaction(null);
     setDeleteOpen(false);
+    toast.success("Transaksi berhasil dihapus");
   }
 
   const sortedTransactions = [...transactions].sort((a, b) => {

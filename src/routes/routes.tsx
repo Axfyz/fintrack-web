@@ -1,14 +1,14 @@
 import { Routes, Route } from "react-router-dom";
-import Dashboard from "@/pages/dashboard";
-import Transaction from "@/pages/transaction";
-import Report from "@/pages/report";
+import DashboardPage from "@/pages/dashboard-page";
+import TransactionPage from "@/pages/transaction-page";
+import ReportPage from "@/pages/report-page";
 
 function AppRoutes() {
   return (
     <Routes>
-      <Route path="/" element={<Dashboard />} />
-      <Route path="/transaction" element={<Transaction />} />
-      <Route path="/report" element={<Report />} />
+      <Route path="/" element={<DashboardPage />} />
+      <Route path="/transaction" element={<TransactionPage />} />
+      <Route path="/report" element={<ReportPage />} />
     </Routes>
   );
 }
